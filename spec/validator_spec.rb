@@ -10,4 +10,14 @@ RSpec.describe Validator do
     FileWriter.new(world, file_path)
     Validator.new(input_file_path, file_path)
   end
+  
+#   it 'works for a Paris file' do
+#     world = FileReader.new('input_sets/paris.in').world
+#     world.unleash_the_cars
+#     file_path = 'output_sets/paris.out'
+#     FileWriter.new(world, file_path)
+#     file = File.read(file_path)
+#     lines = file.split(/\n/)
+#     expect(lines.count).to eq 5
+#   end
 end
