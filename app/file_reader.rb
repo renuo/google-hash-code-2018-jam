@@ -15,7 +15,7 @@ class FileReader
         bonus = first_line[4].to_i
         ticks = first_line[5].to_i
         rides = rides_count.times.map do |i|
-            line = lines[i+1]
+            line = lines[i+1].split(' ')
             start_point = [line[0].to_i, line[1].to_i]
             finish_point = [line[2].to_i, line[3].to_i]
             earliest_start = line[4].to_i

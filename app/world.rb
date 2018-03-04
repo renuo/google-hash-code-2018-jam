@@ -22,6 +22,10 @@ class Ride < ClosedStruct
     def taken?
         !car.nil?
     end
+    
+    def to_s
+        "#{id} -- #{earliest_start}: #{start_point} -> #{latest_finish}: #{finish_point}"
+    end
 end
 
 class Car < ClosedStruct
@@ -33,6 +37,10 @@ class Car < ClosedStruct
         self.tick = 0
         self.rides = []
         self.done = false
+    end
+    
+    def to_s
+        "#{position}"
     end
 end
 
@@ -58,7 +66,34 @@ class World < ClosedStruct
       t1 + t3 + [0, ride.earliest_start - t2].max
     end
     
+    def wait_time(car, ride)
+        t0 = car.tick
+        t1 = distance_to_point(car.position, ride.start_point)
+        t2 = (t1 + t0)
+        [0, ride.earliest_start - t2].max
+    end
+    
     def distance_to_point(point_a, point_b)
       (point_a[0] - point_b[0]).abs + (point_a[1] - point_b[1]).abs
+    end
+    
+    def assign(car, ride)
+        car.rides << ride
+        ride.car = car
+        car.tick += tick_cost_for_ride(car, ride)
+        car.position = ride.finish_point
+    end
+    
+    def can_car_make_the_ride?(car, ride)
+        cost = tick_cost_for_ride(car, ride)
+        ret = (cost < ride.latest_finish - car.tick) && car.tick + cost < @ticks
+        # puts "can car #{car} do ride #{ride}? #{ret}"
+        ret
+    end
+    
+    def can_car_get_the_bonus?(car, ride)
+        t0 = car.tick
+        t1 = distance_to_point(car.position, ride.start_point)
+        (t0 + t1) == ride.earliest_start
     end
 end
